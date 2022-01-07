@@ -18,6 +18,7 @@ int distanceLeft;
 int distanceFront;
 int distanceRight;
 int a = 0;
+int s; //these last two variables are for monitoring the ir sensor for the ground, sb is controlled by the sensor while a is controlled by the code
 
 void setup(){
   //set the trigger pins as outputs
@@ -49,4 +50,35 @@ void loop(){
   distanceLeft = checkDist(leftTrigPin, leftEchoPin);
   distanceFront = checkDist(frontTrigPin, frontEchoPin);
   distanceRight = checkDist(rightEchoPin, rightEchoPin);
+  //Get the distances
+  s = digitalRead(irpin);
+  //check if there is a floor
+  if(s==HIGH){ //if there isn't a floor turn left
+    digitalWrite(4, LOW);
+    digitalWrite(7, HIGH);
+    digitalWrite(8, LOW);
+    digitalWrite(12, HIGH);
+      delay(1000);
+    a=1;
+    }
+  if ((a==0)&&(s==LOW)&&(distanceLeft <= 15 && distanceFront > 15 && distanceRight <= 15) || (a==0)&&(s==LOW)&&(distanceLeft > 15 && distanceFront > 15 && distanceRight > 15)){
+    digitalWrite(4, HIGH);
+    digitalWrite(7, LOW);
+    digitalWrite(8, HIGH);
+    digitalWrite(12,LOW);
+  }
+  if ((a==1)&&(s==LOW)||(s==LOW)&&(distanceLeft <= 15 && distanceFront <= 15 && distanceRight > 15)||(s==LOW)&&(distanceLeft <= 15 && distanceFront <= 15 && distanceRight > 15)||(s==LOW)&& (distanceLeft <= 15 && distanceFront > 15 && distanceRight > 15)||(distanceLeft <= 15 && distanceFront > 15 && distanceRight > 15)){
+    digitalWrite(4, HIGH);
+    digitalWrite(7, LOW);
+    digitalWrite(8, LOW);
+    digitalWrite(12, HIGH);
+    delay(100);
+    a=0;
+  }
+  if ((s==LOW)&&(distanceLeft > 15 && distanceFront <= 15 && distanceRight <= 15) ||(s==LOW)&& (distanceLeft > 15 && distanceFront > 15 && distanceRight <= 15) ||(s==LOW)&& (distanceLeft > 15 && distanceFront <= 15 && distanceRight > 15) ){
+    digitalWrite(4, LOW);
+    digitalWrite(7, HIGH);
+    digitalWrite(8, HIGH);
+    digitalWrite(12, LOW);
+  }
 }
