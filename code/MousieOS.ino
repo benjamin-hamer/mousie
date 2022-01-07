@@ -12,9 +12,8 @@ const int rightEchoPin = 11;
 int irpin = 2;
 
 //define variables for distance calculations
-long durationLeft;
-long durationFront;
-long durationRight;
+long duration;
+int distance; //These first two are exclusively used in the function checkDist
 int distanceLeft;
 int distanceFront;
 int distanceRight;
@@ -30,8 +29,24 @@ void setup(){
   pinMode(frontEchoPin, INPUT);
   pinMode(rightEchoPin, INPUT);
   //set the pins for the motor controller as outputs
-  pinMode(4, OUTPUT);
-  pinMode(7, OUTPUT);
-  pinMode(8, OUTPUT);
-  pinMode(12, OUTPUT);
+  pinMode(4, OUTPUT); //Left forward
+  pinMode(7, OUTPUT); //Left back
+  pinMode(8, OUTPUT); //Right forward
+  pinMode(12, OUTPUT); //Right back
+}
+
+int checkDist(int trigPin, int echoPin){
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  long duration = pulseIn(echoPin, HIGH);
+  int distance = duration * 0.034 / 2;
+  return distance;
+}
+void loop(){
+  distanceLeft = checkDist(leftTrigPin, leftEchoPin);
+  distanceFront = checkDist(frontTrigPin, frontEchoPin);
+  distanceRight = checkDist(rightEchoPin, rightEchoPin);
 }
